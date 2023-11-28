@@ -16,6 +16,8 @@ dependencies:
   flutter_datetime_picker_plus: ^2.1.0
   infinite_scroll_pagination: ^3.2.0
   dio: ^5.3.4
+  google_fonts: ^6.1.0
+  auto_size_text: ^3.0.0
 
 
 dev_dependencies:

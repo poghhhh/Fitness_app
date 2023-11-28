@@ -1,3 +1,4 @@
+import 'package:fitness_app/feature/providers/network/responses/excercise_list_response.dart';
 import 'package:fitness_app/feature/providers/repositories/excercise_list_page_repository.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -7,8 +8,7 @@ import 'package:get/get.dart';
 class ExcerciseListController extends GetxController
     with GetSingleTickerProviderStateMixin {
   ExcerciseListPageRepositoryIml excerciseListPageRepositoryIml = Get.find();
-  final RxBool isIOS = true.obs;
-
+  Rx<Excercise> dataList = Rx(Excercise());
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -45,6 +45,6 @@ class ExcerciseListController extends GetxController
 
   fetchData() async {
     final data = await excerciseListPageRepositoryIml.fetch();
-    print(data);
+    dataList.value = data;
   }
 }

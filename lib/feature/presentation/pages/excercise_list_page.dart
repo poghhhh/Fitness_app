@@ -1,6 +1,6 @@
 import 'package:fitness_app/feature/presentation/controllers/excercise_list_controller.dart';
+import 'package:fitness_app/feature/presentation/pages/excercise_details_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:get/get.dart';
 
@@ -9,15 +9,6 @@ class ExcerciseListPage extends GetView<ExcerciseListController> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.isIOS.value) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarBrightness: Theme.of(context).brightness,
-          systemStatusBarContrastEnforced: true,
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
@@ -30,7 +21,6 @@ class ExcerciseListPage extends GetView<ExcerciseListController> {
                 color: Colors.white,
               ),
         ),
-        actions: const [],
         centerTitle: false,
         elevation: 0,
       ),
@@ -72,6 +62,95 @@ class ExcerciseListPage extends GetView<ExcerciseListController> {
                   ),
                 ],
               ),
+            ),
+            Obx(
+              () {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: controller.dataList.value.body?.length ?? 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      var item = controller.dataList.value.body![index];
+                      return Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            Get.to(ExcerciseDetailsPage());
+                          },
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  color: Color(0x230E151B),
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: const Color(0xFFE0E3E7),
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              16, 12, 8, 12),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            item,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyLarge
+                                                .override(
+                                                  fontFamily:
+                                                      'Plus Jakarta Sans',
+                                                  color:
+                                                      const Color(0xFF14181B),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                          ),
+                                          const Icon(
+                                            Icons.chevron_right_rounded,
+                                            color: Color(0xFF7C8791),
+                                            size: 24,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ).animateOnPageLoad(controller
+                            .animationsMap['containerOnPageLoadAnimation']!),
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ],
         ),
