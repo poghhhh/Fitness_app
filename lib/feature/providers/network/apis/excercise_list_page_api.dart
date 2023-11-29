@@ -2,14 +2,22 @@ import 'package:fitness_app/feature/providers/network/api_endpoint.dart';
 import 'package:fitness_app/feature/providers/network/api_provider.dart';
 import 'package:fitness_app/feature/providers/network/api_request_representable.dart';
 
-enum ExcerciseType { fetch }
+enum ExcerciseType { fetchExcerciseList, fetchExcerciseBodyPartList }
 
 class ExcerciseAPI implements APIRequestRepresentable {
   final ExcerciseType type;
-  ExcerciseAPI._({required this.type});
-  ExcerciseAPI.fetchBodyPart()
+  String? keyword;
+  int? offset;
+  int? limit;
+  ExcerciseAPI._({required this.type, this.keyword, this.offset, this.limit});
+  ExcerciseAPI.fetchExcerciseList()
+      : this._(type: ExcerciseType.fetchExcerciseList);
+  ExcerciseAPI.fetchExcerciseBodyPartList(String keyword, int offset, int limit)
       : this._(
-          type: ExcerciseType.fetch,
+          type: ExcerciseType.fetchExcerciseBodyPartList,
+          keyword: keyword,
+          offset: offset,
+          limit: limit,
         );
   @override
   String get endpoint => APIEndpoint.newsapi;
@@ -38,11 +46,25 @@ class ExcerciseAPI implements APIRequestRepresentable {
 
   @override
   String get path {
-    return "bodyPartList";
+    switch (type) {
+      case ExcerciseType.fetchExcerciseList:
+        return "bodyPartList";
+      case ExcerciseType.fetchExcerciseBodyPartList:
+        return "bodyPart/$keyword";
+    }
   }
 
   @override
   Map<String, String> get query {
-    return {};
+    switch (type) {
+      case ExcerciseType.fetchExcerciseList:
+        return {};
+      case ExcerciseType.fetchExcerciseBodyPartList:
+        return {
+          "": "$keyword",
+          "offset": "$offset",
+          "limit": "$limit",
+        };
+    }
   }
 }

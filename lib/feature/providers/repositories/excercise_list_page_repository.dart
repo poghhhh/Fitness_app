@@ -5,7 +5,7 @@ import 'package:fitness_app/feature/providers/network/responses/excercise_list_r
 class ExcerciseListPageRepositoryIml extends ExcerciseListPageRepository {
   @override
   Future<Excercise> fetch() async {
-    final response = await ExcerciseAPI.fetchBodyPart().request();
+    final response = await ExcerciseAPI.fetchExcerciseList().request();
     return Excercise.fromJson(response);
   }
 }
