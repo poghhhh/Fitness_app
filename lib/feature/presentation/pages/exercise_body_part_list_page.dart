@@ -11,6 +11,7 @@ class ExcerciseBodyPartListPage
 
   @override
   Widget build(BuildContext context) {
+    controller.scrollController.addListener(() => controller.onScroll());
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
@@ -23,13 +24,14 @@ class ExcerciseBodyPartListPage
         ),
         centerTitle: false,
         leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            )),
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+        ),
         elevation: 0,
       ),
       body: SafeArea(
@@ -65,7 +67,7 @@ class ExcerciseBodyPartListPage
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    'asdfasdffasdf',
+                    'Excercise List:',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
@@ -74,172 +76,192 @@ class ExcerciseBodyPartListPage
             Obx(
               () {
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: controller.dataList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var item = controller.dataList[index];
-                      return Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 18, 8),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () {
-                            Get.toNamed(AppRoutes.excerciseDetailsPage,
-                                arguments: {"excerciseId": item.id});
-                          },
-                          child: Container(
-                            width: MediaQuery.sizeOf(context).width,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              boxShadow: const [
-                                BoxShadow(
-                                  blurRadius: 5,
-                                  color: Color(0x230E151B),
-                                  offset: Offset(0, 2),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(8),
-                                    bottomRight: Radius.circular(0),
-                                    topLeft: Radius.circular(8),
-                                    topRight: Radius.circular(0),
-                                  ),
-                                  child: Image.network(
-                                    item.gifUrl ?? '',
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
+                  child: RefreshIndicator(
+                    onRefresh: () => controller.onRefresh(),
+                    child: ListView.builder(
+                      itemCount: controller.hasMoreValue.value
+                          ? controller.dataList.length + 1
+                          : controller.dataList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (controller.dataList.isEmpty) {
+                          // Handle case where dataList is empty
+                          return const Center(
+                            child: Text("No exercises available."),
+                          );
+                        }
+                        if (index < controller.dataList.length) {
+                          var item = controller.dataList[index];
+                          return Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                16, 0, 18, 8),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () {
+                                Get.toNamed(AppRoutes.excerciseDetailsPage,
+                                    arguments: {"excerciseId": item.id});
+                              },
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      blurRadius: 5,
+                                      color: Color(0x230E151B),
+                                      offset: Offset(0, 2),
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            12, 0, 0, 0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.name ?? '',
-                                          style: FlutterFlowTheme.of(context)
-                                              .headlineSmall
-                                              .override(
-                                                fontFamily: 'Outfit',
-                                                color: const Color(0xFF090F13),
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(0, 4, 0, 0),
-                                              child: Text(
-                                                'Equipment:',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Outfit',
-                                                          color: const Color(
-                                                              0xFF7C8791),
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(4, 4, 0, 0),
-                                              child: Text(
-                                                item.equipment ?? '',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Outfit',
-                                                          color: const Color(
-                                                              0xFF090F13),
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(0, 4, 0, 0),
-                                              child: Text(
-                                                'Target:',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Outfit',
-                                                          color: const Color(
-                                                              0xFF7C8791),
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(4, 4, 0, 0),
-                                              child: Text(
-                                                item.target ?? '',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily: 'Outfit',
-                                                          color: const Color(
-                                                              0xFF090F13),
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(8),
+                                        bottomRight: Radius.circular(0),
+                                        topLeft: Radius.circular(8),
+                                        topRight: Radius.circular(0),
+                                      ),
+                                      child: Image.network(
+                                        item.gifUrl ?? '',
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 0, 0, 0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.name ?? '',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .headlineSmall
+                                                  .override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        const Color(0xFF090F13),
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(0, 4, 0, 0),
+                                                  child: Text(
+                                                    'Equipment:',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodySmall
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF7C8791),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(4, 4, 0, 0),
+                                                  child: Text(
+                                                    item.equipment ?? '',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF090F13),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(0, 4, 0, 0),
+                                                  child: Text(
+                                                    'Target:',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodySmall
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF7C8791),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(4, 4, 0, 0),
+                                                  child: Text(
+                                                    item.target ?? '',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF090F13),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.grey,
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 );
               },
