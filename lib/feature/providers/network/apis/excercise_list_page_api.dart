@@ -2,7 +2,11 @@ import 'package:fitness_app/feature/providers/network/api_endpoint.dart';
 import 'package:fitness_app/feature/providers/network/api_provider.dart';
 import 'package:fitness_app/feature/providers/network/api_request_representable.dart';
 
-enum ExcerciseType { fetchExcerciseList, fetchExcerciseBodyPartList }
+enum ExcerciseType {
+  fetchExcerciseList,
+  fetchExcerciseBodyPartList,
+  fetchExcerciseDetails
+}
 
 class ExcerciseAPI implements APIRequestRepresentable {
   final ExcerciseType type;
@@ -19,6 +23,9 @@ class ExcerciseAPI implements APIRequestRepresentable {
           offset: offset,
           limit: limit,
         );
+  ExcerciseAPI.fetchExcerciseDetails(String keyword)
+      : this._(type: ExcerciseType.fetchExcerciseDetails, keyword: keyword);
+
   @override
   String get endpoint => APIEndpoint.newsapi;
 
@@ -51,6 +58,8 @@ class ExcerciseAPI implements APIRequestRepresentable {
         return "bodyPartList";
       case ExcerciseType.fetchExcerciseBodyPartList:
         return "bodyPart/$keyword";
+      case ExcerciseType.fetchExcerciseDetails:
+        return "exercise/$keyword";
     }
   }
 
@@ -65,6 +74,8 @@ class ExcerciseAPI implements APIRequestRepresentable {
           "offset": "$offset",
           "limit": "$limit",
         };
+      case ExcerciseType.fetchExcerciseDetails:
+        return {"": "$keyword"};
     }
   }
 }

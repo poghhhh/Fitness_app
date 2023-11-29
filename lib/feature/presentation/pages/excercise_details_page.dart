@@ -16,10 +16,12 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
       appBar: AppBar(
         backgroundColor: const Color(0xff42BEA5),
         automaticallyImplyLeading: false,
-        title: Text(
-          'alternate lateral pulldown',
-          style: FlutterFlowTheme.of(context).displaySmall.override(
-              fontFamily: 'Outfit', color: Colors.white, fontSize: 25),
+        title: Obx(
+          () => Text(
+            controller.data.value.name ?? '',
+            style: FlutterFlowTheme.of(context).displaySmall.override(
+                fontFamily: 'Outfit', color: Colors.white, fontSize: 25),
+          ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -64,27 +66,41 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 5),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 5),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(
+                          const Text(
                             'Equipment: ',
                           ),
-                          Text(
-                            'cable',
+                          Obx(
+                            () => Text(
+                              controller.data.value.equipment ?? '',
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Image.network(
-                      'https://v2.exercisedb.io/image/0W-PMlUnx3wDD5',
-                      width: MediaQuery.sizeOf(context).width,
-                      height: 240,
-                      fit: BoxFit.cover,
-                    ).animateOnPageLoad(
-                        controller.animationsMap['imageOnPageLoadAnimation']!),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 5),
+                      child: Obx(() {
+                        if (controller.data.value.gifUrl == null) {
+                          return const CircularProgressIndicator(
+                            color: Colors.grey,
+                          );
+                        } else {
+                          return Image.network(
+                            controller.data.value.gifUrl ?? '',
+                            width: MediaQuery.sizeOf(context).width,
+                            fit: BoxFit.cover,
+                          ).animateOnPageLoad(controller
+                              .animationsMap['imageOnPageLoadAnimation']!);
+                        }
+                      }),
+                    ),
                     Padding(
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 12),
@@ -110,13 +126,18 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsetsDirectional
-                                            .fromSTEB(0, 0, 0, 8),
-                                        child: Text(
-                                          'Adipisicing qui occaecat tempor sit elit incididunt adipisicing dolore ea incididunt ea officia exercitation. Enim occaecat sint pariatur cupidatat anim amet anim Lorem incididunt minim reprehenderit incididunt. Nulla deserunt consequat laborum irure do pariatur ullamco incididunt proident reprehenderit adipisicing pariatur deserunt ullamco. Laboris enim nostrud ullamco laborum occaecat ut commodo laboris dolore voluptate eiusmod. Aliqua fugiat aliquip fugiat in eiusmod culpa aliquip reprehenderit ullamco amet amet aliqua. Tempor id veniam reprehenderit sit. Labore nulla aliqua anim amet laboris consectetur id. ',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodySmall,
-                                          overflow: TextOverflow
-                                              .clip, // or TextOverflow.ellipsis
+                                            .fromSTEB(10, 0, 0, 8),
+                                        child: Obx(
+                                          () => Text(
+                                            (controller.data.value
+                                                        .instructions ??
+                                                    [])
+                                                .join(
+                                                    '\n'), // Join elements with a separator
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodySmall,
+                                            overflow: TextOverflow.clip,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -180,10 +201,11 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
                                       style: FlutterFlowTheme.of(context)
                                           .titleMedium
                                           .override(
-                                            fontFamily: 'Outfit',
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          ),
+                                              fontFamily: 'Outfit',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              fontSize: 20),
                                     ),
                                   ),
                                   Expanded(
@@ -192,12 +214,12 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
                                           const EdgeInsetsDirectional.fromSTEB(
                                               8, 4, 8, 0),
                                       child: Text(
-                                        'lats',
+                                        controller.data.value.target ?? '',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.getFont(
                                           'Lexend Deca',
                                           color: const Color(0xB3FFFFFF),
-                                          fontSize: 12,
+                                          fontSize: 20,
                                         ),
                                       ),
                                     ),
@@ -244,10 +266,10 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
                                     style: FlutterFlowTheme.of(context)
                                         .titleMedium
                                         .override(
-                                          fontFamily: 'Outfit',
-                                          color: FlutterFlowTheme.of(context)
-                                              .alternate,
-                                        ),
+                                            fontFamily: 'Outfit',
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                            fontSize: 20),
                                   ),
                                 ),
                                 Expanded(
@@ -255,13 +277,20 @@ class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
                                     padding:
                                         const EdgeInsetsDirectional.fromSTEB(
                                             8, 4, 8, 0),
-                                    child: Text(
-                                      'biceps\nrhomboids',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.getFont(
-                                        'Lexend Deca',
-                                        color: const Color(0xB3FFFFFF),
-                                        fontSize: 12,
+                                    child: Obx(
+                                      () => Text(
+                                        (controller.data.value
+                                                    .secondaryMuscles ??
+                                                [])
+                                            .join(
+                                                '\n'), // Join elements with a separator
+                                        style: GoogleFonts.getFont(
+                                          'Lexend Deca',
+                                          color: const Color(0xB3FFFFFF),
+                                          fontSize: 20,
+                                        ),
+                                        overflow: TextOverflow.clip,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
