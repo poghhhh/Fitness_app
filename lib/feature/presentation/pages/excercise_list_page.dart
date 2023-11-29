@@ -1,5 +1,6 @@
 import 'package:fitness_app/feature/presentation/controllers/excercise_list_controller.dart';
-import 'package:fitness_app/feature/presentation/pages/excercise_details_page.dart';
+import 'package:fitness_app/feature/presentation/widget/WaveClipWidget/wave_clip_widget.dart';
+import 'package:fitness_app/feature/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:get/get.dart';
@@ -79,7 +80,8 @@ class ExcerciseListPage extends GetView<ExcerciseListController> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
-                            Get.to(ExcerciseDetailsPage());
+                            Get.toNamed(AppRoutes.excerciseBodyPartListPage,
+                                arguments: {"query": item});
                           },
                           child: Container(
                             width: MediaQuery.sizeOf(context).width,
@@ -156,25 +158,5 @@ class ExcerciseListPage extends GetView<ExcerciseListController> {
         ),
       ),
     );
-  }
-}
-
-class WaveClip extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    final lowPoint = size.height - 30;
-    final highPoint = size.height - 60;
-    path.lineTo(0, size.height);
-    path.quadraticBezierTo(size.width / 4, highPoint, size.width / 2, lowPoint);
-    path.quadraticBezierTo(
-        3 / 4 * size.width, size.height, size.width, lowPoint);
-    path.lineTo(size.width, 0);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
   }
 }

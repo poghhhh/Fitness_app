@@ -1,40 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fitness_app/feature/presentation/controllers/excercise_details_page_controller.dart';
+import 'package:fitness_app/feature/presentation/widget/WaveClipWidget/wave_clip_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ExcerciseDetailsPage extends StatelessWidget {
-  ExcerciseDetailsPage({super.key});
-  final animationsMap = {
-    'imageOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: const Offset(79, 0),
-          end: const Offset(0, 0),
-        ),
-        ScaleEffect(
-          curve: Curves.easeOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: const Offset(1, 0),
-          end: const Offset(1, 1),
-        ),
-      ],
-    ),
-  };
+class ExcerciseDetailsPage extends GetView<ExcerciseDetailsPageController> {
+  const ExcerciseDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +19,7 @@ class ExcerciseDetailsPage extends StatelessWidget {
         title: Text(
           'alternate lateral pulldown',
           style: FlutterFlowTheme.of(context).displaySmall.override(
-              fontFamily: 'Outfit', color: Colors.white, fontSize: 20),
+              fontFamily: 'Outfit', color: Colors.white, fontSize: 25),
         ),
         leading: IconButton(
           onPressed: () {
@@ -111,7 +84,7 @@ class ExcerciseDetailsPage extends StatelessWidget {
                       height: 240,
                       fit: BoxFit.cover,
                     ).animateOnPageLoad(
-                        animationsMap['imageOnPageLoadAnimation']!),
+                        controller.animationsMap['imageOnPageLoadAnimation']!),
                     Padding(
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 12),
@@ -307,25 +280,5 @@ class ExcerciseDetailsPage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class WaveClip extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    final lowPoint = size.height - 30;
-    final highPoint = size.height - 60;
-    path.lineTo(0, size.height);
-    path.quadraticBezierTo(size.width / 4, highPoint, size.width / 2, lowPoint);
-    path.quadraticBezierTo(
-        3 / 4 * size.width, size.height, size.width, lowPoint);
-    path.lineTo(size.width, 0);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
   }
 }
