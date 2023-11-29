@@ -15,6 +15,7 @@ class ExcerciseBodyPartListPage
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: const Color(0xff42BEA5),
         automaticallyImplyLeading: false,
         title: Text(
